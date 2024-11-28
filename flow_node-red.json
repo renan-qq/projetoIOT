@@ -1,0 +1,177 @@
+[
+    {
+        "id": "00c9673a883bb441",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "75a75514e6e0750d",
+        "type": "mqtt in",
+        "z": "00c9673a883bb441",
+        "name": "",
+        "topic": "10409432/carbono",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ef17067baf8c2aef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 140,
+        "wires": [
+            [
+                "f5f24fcd049531b7",
+                "cdf796f411601f0e"
+            ]
+        ]
+    },
+    {
+        "id": "78c9cab79f18615b",
+        "type": "debug",
+        "z": "00c9673a883bb441",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "f5f24fcd049531b7",
+        "type": "function",
+        "z": "00c9673a883bb441",
+        "name": "function 3",
+        "func": "let valor = msg.payload;\n\nif (valor > 800) {\n    msg.payload = \"Quantidade de carbono: \" + valor + \". Alta concentração, efeitos: Risco de morte.\";\n} else if (valor >= 200 && valor <= 800) {\n    msg.payload = \"Quantidade de carbono: \" + valor + \". Concentração moderada, efeitos: Dor de cabeça e desorientação\";\n} else if (valor >= 35 && valor <= 200) {\n    msg.payload = \"Quantidade de carbono: \" + valor + \". Baixa concentração, efeitos: Tontura e falta de ar\";\n}\nelse {\n    msg.payload = \"Quantidade de carbono: \" + valor + \". Ambiente sem riscos\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 140,
+        "wires": [
+            [
+                "78c9cab79f18615b",
+                "9bf23a7db35f240a"
+            ]
+        ]
+    },
+    {
+        "id": "cdf796f411601f0e",
+        "type": "influxdb out",
+        "z": "00c9673a883bb441",
+        "influxdb": "309fb77ab4e8e0a2",
+        "name": "influx",
+        "measurement": "valorsensor",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organizacao",
+        "bucket": "bucketprojeto",
+        "x": 470,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "9bf23a7db35f240a",
+        "type": "node-red-contrib-whatsapp-cmb-send-message",
+        "z": "00c9673a883bb441",
+        "name": "WaAPI",
+        "credtype": "account",
+        "account": "eae1fb89cf364ec5",
+        "text": "payload",
+        "phonenumbervalue": "",
+        "apikeyvalue": "",
+        "apikeyinputtypemessage": "msg",
+        "phonenumberinputtypemessage": "msg",
+        "inputtypemessage": "msg",
+        "rejectssl": false,
+        "x": 650,
+        "y": 340,
+        "wires": [
+            [
+                "38b28d9d19653a59"
+            ]
+        ]
+    },
+    {
+        "id": "38b28d9d19653a59",
+        "type": "debug",
+        "z": "00c9673a883bb441",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "ef17067baf8c2aef",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "309fb77ab4e8e0a2",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com/",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "eae1fb89cf364ec5",
+        "type": "node-red-contrib-whatsapp-cmb-account",
+        "name": "WhatsappAPI"
+    }
+]
